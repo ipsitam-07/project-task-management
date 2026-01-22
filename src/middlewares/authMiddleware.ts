@@ -2,7 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import authConfig from '../config/auth.config';
 import { NextFunction, Request, Response } from 'express';
 
-export interface IGetUserAuthInfoRequest extends Request {
+interface IGetUserAuthInfoRequest extends Request {
   user: string | JwtPayload;
 }
 
