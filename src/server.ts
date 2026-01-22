@@ -1,27 +1,22 @@
-import express, { Request, Response } from 'express';
-import config from './config/config';
 import mongoose from 'mongoose';
+import app from './app';
+import config from './config/config';
 
-const port = config.port;
+const PORT = config.port;
+const MONGO_URI = config.mongoURI;
 
-const connectURI = config.mongoURI;
+const startServer = async () => {
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log('MongoDB connected successfully');
 
-mongoose
-  .connect(connectURI)
-  .then(() => {
-    console.log('Mongo DB connected successfully!');
-  })
-  .catch(() => {
-    console.log('DB connection failed');
-  });
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server');
+    process.exit(1);
+  }
+};
 
-const app = express();
-app.use(express.json());
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello!');
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port: ${port}!`);
-});
+startServer();
