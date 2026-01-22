@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import app from './app';
 import config from './config/app.config';
 import { swaggerDocs } from './swagger';
+import { MongoAPIError } from 'mongodb';
 
 const PORT = config.port;
 const MONGO_URI = config.mongoURI;
@@ -17,6 +18,7 @@ const startServer = async () => {
     });
   } catch (error) {
     console.error('Failed to start server');
+    console.error(error);
     process.exit(1);
   }
 };

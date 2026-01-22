@@ -1,7 +1,8 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { registerUser, loginUser } from '../services/auth.service';
+import { AuthRequest } from '../types';
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (req: AuthRequest, res: Response) => {
   try {
     const { name, email, password } = req.body;
 
@@ -28,7 +29,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login = async (req: AuthRequest, res: Response) => {
   try {
     const { email, password } = req.body;
 
