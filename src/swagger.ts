@@ -1,5 +1,6 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
+import { Express } from 'express';
 
 const options = {
   definition: {
@@ -24,12 +25,120 @@ const options = {
         url: 'http://localhost:3000',
       },
     ],
+    components: {
+  securitySchemes: {
+    bearerAuth: {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    },
   },
-  apis: ['./routes/*.ts'],
+  schemas: {
+    User: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          example: '65a1f6e031007b00e0057930',
+        },
+        name: {
+          type: 'string',
+          example: 'Ipsita Mohanty',
+        },
+        email: {
+          type: 'string',
+          example: 'ipsita@test.com',
+        },
+      },
+    },
+
+    RegisterUser: {
+      type: 'object',
+      required: ['name', 'email', 'password'],
+      properties: {
+        name: {
+          type: 'string',
+          example: 'Ipsita',
+        },
+        email: {
+          type: 'string',
+          example: 'ipsita@test.com',
+        },
+        password: {
+          type: 'string',
+          example: 'password123',
+        },
+      },
+    },
+
+    LoginUser: {
+      type: 'object',
+      required: ['email', 'password'],
+      properties: {
+        email: {
+          type: 'string',
+          example: 'ipsita@test.com',
+        },
+        password: {
+          type: 'string',
+          example: 'password123',
+        },
+      },
+    },
+
+    Project: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'string',
+          example: '697248b70f319dcb8a6105ba',
+        },
+        name: {
+          type: 'string',
+          example: 'Task Management',
+        },
+        description: {
+          type: 'string',
+          example: 'CRUD API assignment',
+        },
+        owner: {
+          type: 'string',
+          example: '6972489c0f319dcb8a6105b7',
+        },
+        createdAt: {
+          type: 'string',
+          example: '2026-01-22T15:56:39.997Z',
+        },
+        updatedAt: {
+          type: 'string',
+          example: '2026-01-22T15:56:39.997Z',
+        }
+      },
+    },
+
+    CreateProject: {
+      type: 'object',
+      required: ['name'],
+      properties: {
+        name: {
+          type: 'string',
+          example: 'Task Management',
+        },
+        description: {
+          type: 'string',
+          example: 'CRUD API assignment',
+        },
+      },
+    },
+  },
+},
+
+  },
+  apis: ['src/routes/*.ts'],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
-export function swaggerDocs(app: any, port: string | number) {
+export const swaggerDocs = (app: Express) => {
   app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-}
+};

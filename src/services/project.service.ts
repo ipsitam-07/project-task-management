@@ -13,3 +13,8 @@ export const createProjectService = async (name: string, description: string, ow
 
   return project;
 };
+
+export const getProjectsService = async (userId: string) => {
+  const projects = await Project.find({ owner: userId });
+  return projects;
+};
