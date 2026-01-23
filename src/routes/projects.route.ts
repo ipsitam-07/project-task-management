@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createProject, getProjects } from '../controllers/project.controller';
+import { createProject, getProjects, getProjectbyID } from '../controllers/project.controller';
 import authMiddleware from '../middlewares/authMiddleware';
 
 const router = Router();
@@ -58,8 +58,39 @@ router.post('/', createProject);
  *         description: Unauthorized
  */
 
-
 //GET /projects
 router.get('/', getProjects);
+
+
+/**
+ * @swagger
+ * /projects/{id}:
+ *   get:
+ *     summary: Get a project by ID
+ *     tags: [Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: Project details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Project'
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Project not found
+ */
+
+//GET /projects/:id
+router.get('/:id', getProjectbyID)
 
 export default router;

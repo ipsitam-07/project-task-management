@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { createProjectService, getProjectsService } from '../services/project.service';
+import { createProjectService, getProjectsService, getProjectsbyIDService } from '../services/project.service';
 import { AuthRequest } from '../types';
 
 //POST
@@ -58,3 +58,48 @@ export const getProjects = async (req: AuthRequest, res: Response) => {
     });
   }
 };
+
+//GET Projects by ID
+export const getProjectbyID = async (
+  req: AuthRequest,
+  res: Response
+) => {
+  try {
+    const userId = req.user?.id;
+    const projectId = req.params.id;
+
+
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized',
+      });
+    }
+
+    if (!projectId || typeof projectId !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid project id',
+      });
+    }
+
+    const project = await getProjectsbyIDService(projectId, userId);
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        message: 'Project not found',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: project,
+    });
+  } catch (error){
+      return res.status(500).json({
+      success: false,
+      message: 'Failed to fetch project',
+    });
+  }
+}
