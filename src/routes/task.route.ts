@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { createTask, getTasksbyProject, getTaskById } from '../controllers/task.controller';
+import {
+  createTask,
+  getTasksbyProject,
+  getTaskById,
+  updateTaskStatus,
+} from '../controllers/task.controller';
 import authMiddleware from '../middlewares/authMiddleware';
 
 const router = Router();
@@ -141,5 +146,48 @@ router.get('/projects/:projectId/tasks', getTasksbyProject);
 
 //GET /tasks/:id
 router.get('/tasks/:id', getTaskById);
+
+/**
+ * @swagger
+ * /tasks/{id}/status:
+ *   patch:
+ *     summary: Update task status by ID
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Task ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - status
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [OPEN, IN_PROGRESS, DONE]
+ *     responses:
+ *       200:
+ *         description: Task status updated
+ *       400:
+ *         description: Invalid status transition
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Internal server error
+ */
+
+//PATCH /tasks/:id/status
+router.patch('/tasks/:id/status', updateTaskStatus);
 
 export default router;

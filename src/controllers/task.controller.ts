@@ -4,6 +4,7 @@ import {
   createTaskService,
   getAllTasksbyProjectService,
   getTaskbyIdService,
+  updateStatusbyTaskIdService,
 } from '../services/task.service';
 import { AppError } from '../utils/error';
 
@@ -85,5 +86,35 @@ export const getTaskById = async (req: AuthRequest, res: Response) => {
   res.status(200).json({
     success: true,
     data: task,
+  });
+};
+
+//PATCH /tasks/:id/status
+export const updateTaskStatus = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const taskId = req.params.id;
+  const status = req.body.status;
+
+  if (!userId) {
+    throw new AppError('Unauthorized', 401);
+  }
+
+  if (!taskId || typeof taskId !== 'string') {
+    throw new AppError('Invalid task id', 400);
+  }
+
+  if (!status) {
+    throw new AppError('Status is required', 400);
+  }
+
+  const updatedTask = await updateStatusbyTaskIdService(taskId, userId, status);
+
+  if (!updatedTask) {
+    throw new AppError('Task not found', 404);
+  }
+
+  res.status(200).json({
+    success: true,
+    data: updatedTask,
   });
 };
