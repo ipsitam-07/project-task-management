@@ -50,8 +50,18 @@ export const updateProjectsbyIdService = async (
     },
     {
       new: true,
+      upsert: false,
     },
   );
 
   return updatedProject;
+};
+
+//Delete projects by id
+export const deleteProjectsByidService = async (projectID: string, userId: string) => {
+  const deletedProject = await Project.findOneAndDelete({
+    _id: projectID,
+    owner: userId,
+  });
+  return deletedProject;
 };

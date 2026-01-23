@@ -1,9 +1,16 @@
 import { Router } from 'express';
-import { createProject, getProjects, getProjectbyID, updateProjectbyID } from '../controllers/project.controller';
+import {
+  createProject,
+  getProjects,
+  getProjectbyID,
+  updateProjectbyID,
+  deleteProjectbyID,
+} from '../controllers/project.controller';
 import authMiddleware from '../middlewares/authMiddleware';
 
 const router = Router();
 
+//Auth middleware for protected route
 router.use(authMiddleware);
 
 /**
@@ -30,8 +37,12 @@ router.use(authMiddleware);
  *     responses:
  *       201:
  *         description: Project created successfully
+ *       400:
+ *         description: Project name is required
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Failed to create project
  */
 
 //POST /projects
@@ -56,6 +67,8 @@ router.post('/', createProject);
  *                 $ref: '#/components/schemas/Project'
  *       401:
  *         description: Unauthorized
+ *       500:
+ *         description: Failed to get projects
  */
 
 //GET /projects
@@ -83,10 +96,14 @@ router.get('/', getProjects);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Project'
+ *       400:
+ *         description: Invalid project ID
  *       401:
  *         description: Unauthorized
  *       404:
  *         description: Project not found
+ *       500:
+ *         description: Failed to get project
  */
 
 //GET /projects/:id
@@ -128,14 +145,47 @@ router.get('/:id', getProjectbyID);
  *             schema:
  *               $ref: '#/components/schemas/Project'
  *       400:
- *         description: Invalid input
+ *         description: Invalid project ID
  *       401:
  *         description: Unauthorized
  *       404:
  *         description: Project not found
+ *       500:
+ *         description: Failed to update project
  */
 
 //PUT /projects/:id
-router.put('/:id', updateProjectbyID)
+router.put('/:id', updateProjectbyID);
+
+/**
+ * @swagger
+ * /projects/{id}:
+ *   delete:
+ *     summary: Delete a project by ID
+ *     tags: [Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: Project deleted successfully
+ *       400:
+ *         description: Project ID is invalid
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Project not found
+ *       500:
+ *         description: Failed to delete project
+ */
+
+//DETELE /projects/:id
+router.delete('/:id', deleteProjectbyID);
 
 export default router;

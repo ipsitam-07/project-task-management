@@ -4,6 +4,7 @@ import {
   getProjectsService,
   getProjectsbyIDService,
   updateProjectsbyIdService,
+  deleteProjectsByidService,
 } from '../services/project.service';
 import { AuthRequest } from '../types';
 
@@ -22,6 +23,14 @@ export const createProject = async (req: AuthRequest, res: Response) => {
       });
     }
 
+    // Validate fields
+    if (!name || typeof name !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Project name is required',
+      });
+    }
+
     const project = await createProjectService(name, description, userId);
 
     return res.status(201).json({
@@ -30,9 +39,9 @@ export const createProject = async (req: AuthRequest, res: Response) => {
       data: project,
     });
   } catch (error: any) {
-    return res.status(400).json({
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: 'Failed to create project',
     });
   }
 };
@@ -140,12 +149,54 @@ export const updateProjectbyID = async (req: AuthRequest, res: Response) => {
 
     return res.status(200).json({
       success: true,
+      message: 'Project updated successfully',
       data: updatedProject,
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
       message: 'Failed to update project',
+    });
+  }
+};
+
+//DELETE Project by ID
+export const deleteProjectbyID = async (req: AuthRequest, res: Response) => {
+  try {
+    const userID = req.user?.id;
+    const projectID = req.params.id;
+
+    if (!userID) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized',
+      });
+    }
+
+    if (!projectID || typeof projectID !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid project ID',
+      });
+    }
+
+    const deletedProject = await deleteProjectsByidService(projectID, userID);
+
+    if (!deletedProject) {
+      return res.status(404).json({
+        success: false,
+        message: 'Project not found',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Project has been deleted successfully!',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to delete project.',
     });
   }
 };
