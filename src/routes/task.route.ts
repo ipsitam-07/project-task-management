@@ -4,6 +4,7 @@ import {
   getTasksbyProject,
   getTaskById,
   updateTaskStatus,
+  deleteTask,
 } from '../controllers/task.controller';
 import authMiddleware from '../middlewares/authMiddleware';
 
@@ -189,5 +190,33 @@ router.get('/tasks/:id', getTaskById);
 
 //PATCH /tasks/:id/status
 router.patch('/tasks/:id/status', updateTaskStatus);
+
+/**
+ * @swagger
+ * /tasks/{id}:
+ *   delete:
+ *     summary: Delete a task
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Task deleted successfully
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Internal Server error
+ */
+
+//DELETE /tasks/:id
+router.delete('/tasks/:id', deleteTask);
 
 export default router;

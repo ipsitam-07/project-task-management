@@ -3,7 +3,6 @@ import { Project } from '../models/project.model';
 import { TASK_STATUS_FLOW } from '../utils/task-status';
 import { AppError } from '../utils/error';
 import type { TaskStatus } from '../types/tasks';
-import mongoose from 'mongoose';
 
 //Create task under a project of a logged in user
 export const createTaskService = async (
@@ -97,4 +96,18 @@ export const updateStatusbyTaskIdService = async (
   await task.save();
 
   return task;
+};
+
+//Delete a task
+export const deleteTaskbyIDService = async (taskId: string, userId: string) => {
+  const task = await Task.findById(taskId);
+  if (!task) return null;
+  const project = await Project.findOne({
+    _id: task.project,
+    owner: userId,
+  });
+
+  if (!project) return null;
+  await Task.findByIdAndDelete(taskId);
+  return true;
 };

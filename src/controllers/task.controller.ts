@@ -5,6 +5,7 @@ import {
   getAllTasksbyProjectService,
   getTaskbyIdService,
   updateStatusbyTaskIdService,
+  deleteTaskbyIDService,
 } from '../services/task.service';
 import { AppError } from '../utils/error';
 
@@ -116,5 +117,31 @@ export const updateTaskStatus = async (req: AuthRequest, res: Response) => {
   res.status(200).json({
     success: true,
     data: updatedTask,
+  });
+};
+
+//DELETE /tasks/:id
+
+export const deleteTask = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const taskId = req.params.id;
+
+  if (!userId) {
+    throw new AppError('Unauthorized', 401);
+  }
+
+  if (!taskId || typeof taskId !== 'string') {
+    throw new AppError('Invalid task id', 400);
+  }
+
+  const deletedTask = await deleteTaskbyIDService(taskId, userId);
+
+  if (!deletedTask) {
+    throw new AppError('Task not found', 404);
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Task deleted successfully',
   });
 };
