@@ -16,7 +16,7 @@ export const createTaskService = async (
   });
 
   if (!project) {
-    throw new Error('No projects found');
+    return null;
   }
 
   const task = await Task.create({

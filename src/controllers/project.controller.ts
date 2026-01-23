@@ -7,28 +7,24 @@ import {
   deleteProjectsByidService,
 } from '../services/project.service';
 import { AuthRequest } from '../types';
+import { AppError } from '../utils/error';
+import { appendFile } from 'node:fs';
 
 //POST
 export const createProject = async (req: AuthRequest, res: Response) => {
-  try {
+  
     const { name, description } = req.body;
 
     const userId = req.user?.id;
 
     //no user validation
     if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized',
-      });
+      throw new AppError('Unauthorized', 404);
     }
 
     // Validate fields
     if (!name || typeof name !== 'string') {
-      return res.status(400).json({
-        success: false,
-        message: 'Project name is required',
-      });
+      throw new AppError('Project name is require', 400);
     }
 
     const project = await createProjectService(name, description, userId);
@@ -38,25 +34,15 @@ export const createProject = async (req: AuthRequest, res: Response) => {
       message: 'Project created successfully',
       data: project,
     });
-  } catch (error: any) {
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to create project',
-    });
-  }
 };
 
 //GET
 export const getProjects = async (req: AuthRequest, res: Response) => {
-  try {
     const userId = req.user?.id;
 
     //no user validation
     if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized',
-      });
+      throw new AppError('Unauthorized', 401);
     }
 
     const projects = await getProjectsService(userId);
@@ -65,74 +51,45 @@ export const getProjects = async (req: AuthRequest, res: Response) => {
       success: true,
       data: projects,
     });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to fetch projects',
-    });
-  }
 };
 
 //GET Projects by ID
 export const getProjectbyID = async (req: AuthRequest, res: Response) => {
-  try {
     const userId = req.user?.id;
     const projectId = req.params.id;
 
     if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized',
-      });
+      throw new AppError('Unauthorized', 401);
     }
 
     if (!projectId || typeof projectId !== 'string') {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid project id',
-      });
+      throw new AppError('Invalid project Id', 400);
     }
 
     const project = await getProjectsbyIDService(projectId, userId);
 
     if (!project) {
-      return res.status(404).json({
-        success: false,
-        message: 'Project not found',
-      });
+      throw new AppError('Project Not found', 404);
     }
 
     return res.status(200).json({
       success: true,
       data: project,
     });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to fetch project',
-    });
-  }
 };
 
 //UPDATE Projects by ID
 export const updateProjectbyID = async (req: AuthRequest, res: Response) => {
-  try {
     const userId = req.user?.id;
     const projectID = req.params.id;
     const { name, description } = req.body;
 
     if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized',
-      });
+      throw new AppError('Unauthorized', 401);
     }
 
     if (!projectID || typeof projectID !== 'string') {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid project id',
-      });
+      throw new AppError('Invalid project ID', 400)
     }
 
     const updatedProject = await updateProjectsbyIdService(projectID, userId, {
@@ -141,10 +98,7 @@ export const updateProjectbyID = async (req: AuthRequest, res: Response) => {
     });
 
     if (!updatedProject) {
-      return res.status(404).json({
-        success: false,
-        message: 'Project not found',
-      });
+      throw new AppError('Project not found', 404);
     }
 
     return res.status(200).json({
@@ -152,51 +106,29 @@ export const updateProjectbyID = async (req: AuthRequest, res: Response) => {
       message: 'Project updated successfully',
       data: updatedProject,
     });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to update project',
-    });
-  }
 };
 
 //DELETE Project by ID
 export const deleteProjectbyID = async (req: AuthRequest, res: Response) => {
-  try {
     const userID = req.user?.id;
     const projectID = req.params.id;
 
     if (!userID) {
-      return res.status(401).json({
-        success: false,
-        message: 'Unauthorized',
-      });
+      throw new AppError('Unauthorized', 401);
     }
 
     if (!projectID || typeof projectID !== 'string') {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid project ID',
-      });
+      throw new AppError('Invalid project id', 400);
     }
 
     const deletedProject = await deleteProjectsByidService(projectID, userID);
 
     if (!deletedProject) {
-      return res.status(404).json({
-        success: false,
-        message: 'Project not found',
-      });
+      throw new AppError('Project not found', 404);
     }
 
     return res.status(200).json({
       success: true,
       message: 'Project has been deleted successfully!',
     });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to delete project.',
-    });
-  }
 };

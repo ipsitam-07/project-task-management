@@ -3,7 +3,7 @@ import { Project } from '../models/project.model';
 //Create project
 export const createProjectService = async (name: string, description: string, ownerId: string) => {
   if (!name) {
-    throw new Error('Project Name is required!');
+    return null;
   }
 
   const project = await Project.create({
