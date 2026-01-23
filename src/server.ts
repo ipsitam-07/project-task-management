@@ -1,8 +1,6 @@
 import mongoose from 'mongoose';
 import app from './app';
 import config from './config/app.config';
-import { swaggerDocs } from './swagger';
-import { MongoAPIError } from 'mongodb';
 
 const PORT = config.port;
 const MONGO_URI = config.mongoURI;
