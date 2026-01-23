@@ -1,6 +1,10 @@
 import { Response } from 'express';
 import { AuthRequest } from '../types';
-import { createTaskService, getAllTasksbyProjectService } from '../services/task.service';
+import {
+  createTaskService,
+  getAllTasksbyProjectService,
+  getTaskbyIdService,
+} from '../services/task.service';
 import { AppError } from '../utils/error';
 
 //POST /projects/:projectId/tasks
@@ -56,5 +60,30 @@ export const getTasksbyProject = async (req: AuthRequest, res: Response) => {
   res.status(200).json({
     success: true,
     data: tasks,
+  });
+};
+
+//GET /tasks/:id
+export const getTaskById = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const taskId = req.params.id;
+
+  if (!userId) {
+    throw new AppError('Unauthorized', 401);
+  }
+
+  if (!taskId || typeof taskId !== 'string') {
+    throw new AppError('Invalid task id', 400);
+  }
+
+  const task = await getTaskbyIdService(taskId, userId);
+
+  if (!task) {
+    throw new AppError('Task not found', 404);
+  }
+
+  res.status(200).json({
+    success: true,
+    data: task,
   });
 };

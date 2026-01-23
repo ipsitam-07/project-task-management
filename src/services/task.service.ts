@@ -1,5 +1,6 @@
 import { Task } from '../models/task.model';
 import { Project } from '../models/project.model';
+import { AuthRequest } from '../types';
 
 //Create task under a project of a logged in user
 export const createTaskService = async (
@@ -44,4 +45,25 @@ export const getAllTasksbyProjectService = async (projectId: string, userId: str
   });
 
   return tasks;
+};
+
+//get tasks by an id
+export const getTaskbyIdService = async (taskId: string, userId: string) => {
+  const task = await Task.findById({
+    taskId,
+  });
+  if (!task) {
+    return null;
+  }
+
+  const project = await Project.findOne({
+    _id: task.project,
+    owner: userId,
+  });
+
+  if (!project) {
+    return null;
+  }
+
+  return task;
 };
