@@ -1,17 +1,14 @@
 import { Response } from 'express';
 import { registerUser, loginUser } from '../services/auth.service';
 import { AuthRequest } from '../types';
+import { AppError } from '../utils/error';
 
 export const register = async (req: AuthRequest, res: Response) => {
-  try {
     const { name, email, password } = req.body;
 
     // Basic validation
     if (!name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Name, email and password are required',
-      });
+      throw new AppError('Name, email and password are required', 400);
     }
 
     const user = await registerUser(name, email, password);
@@ -21,24 +18,14 @@ export const register = async (req: AuthRequest, res: Response) => {
       message: 'User registered successfully',
       data: user,
     });
-  } catch (error: any) {
-    return res.status(400).json({
-      success: false,
-      message: error.message,
-    });
-  }
 };
 
 export const login = async (req: AuthRequest, res: Response) => {
-  try {
     const { email, password } = req.body;
 
     // Basic validation
     if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Email and password are required',
-      });
+      throw new AppError('Email and password are required', 400);
     }
 
     const data = await loginUser(email, password);
@@ -48,10 +35,4 @@ export const login = async (req: AuthRequest, res: Response) => {
       message: 'Login successful',
       data,
     });
-  } catch (error: any) {
-    return res.status(401).json({
-      success: false,
-      message: error.message,
-    });
-  }
 };

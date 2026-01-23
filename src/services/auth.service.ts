@@ -2,13 +2,14 @@ import bcrypt from 'bcrypt';
 import { User } from '../models/user.model';
 import authConfig from '../config/auth.config';
 import jwt from 'jsonwebtoken';
+import { AppError } from '../utils/error';
 
 export const registerUser = async (name: string, email: string, password: string) => {
   //checking if user exists
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    throw new Error('User already exists with email');
+    throw new AppError('User already exists with email', 409);
   }
 
   //hashing password
@@ -32,13 +33,13 @@ export const loginUser = async (email: string, password: string) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new Error('Invalid email or password');
+    throw new AppError('Invalid email or password', 400);
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
 
   if (!isPasswordValid) {
-    throw new Error('Invalid email or password');
+    throw new AppError('Invalid email or password', 400);
   }
 
   const accessToken = jwt.sign(
