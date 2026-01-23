@@ -30,3 +30,28 @@ export const getProjectsbyIDService = async (projectId: string, userID: string) 
 
   return project;
 };
+
+//Update projects by Id
+export const updateProjectsbyIdService = async (
+  projectId: string,
+  userId: string,
+  updateData: {
+    name?: string;
+    description?: string;
+  },
+) => {
+  const updatedProject = await Project.findOneAndUpdate(
+    {
+      _id: projectId,
+      owner: userId,
+    },
+    {
+      $set: updateData,
+    },
+    {
+      new: true,
+    },
+  );
+
+  return updatedProject;
+};

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createProject, getProjects, getProjectbyID } from '../controllers/project.controller';
+import { createProject, getProjects, getProjectbyID, updateProjectbyID } from '../controllers/project.controller';
 import authMiddleware from '../middlewares/authMiddleware';
 
 const router = Router();
@@ -61,7 +61,6 @@ router.post('/', createProject);
 //GET /projects
 router.get('/', getProjects);
 
-
 /**
  * @swagger
  * /projects/{id}:
@@ -91,6 +90,52 @@ router.get('/', getProjects);
  */
 
 //GET /projects/:id
-router.get('/:id', getProjectbyID)
+router.get('/:id', getProjectbyID);
+
+/**
+ * @swagger
+ * /projects/{id}:
+ *   put:
+ *     summary: Update a project by ID
+ *     tags: [Projects]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Updated Project Name
+ *               description:
+ *                 type: string
+ *                 example: Updated project description
+ *     responses:
+ *       200:
+ *         description: Project updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Project'
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Project not found
+ */
+
+//PUT /projects/:id
+router.put('/:id', updateProjectbyID)
 
 export default router;
