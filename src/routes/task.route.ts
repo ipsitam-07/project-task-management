@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createTask } from '../controllers/task.controller';
+import { createTask, getTasksbyProject } from '../controllers/task.controller';
 import authMiddleware from '../middlewares/authMiddleware';
 
 const router = Router();
@@ -44,10 +44,57 @@ router.use(authMiddleware);
  *       404:
  *         description: Project not found
  *       500:
- *         description: Failed to create task
+ *         description: Internal server error
  */
 
 //POST /projects/:projectId/tasks
 router.post('/projects/:projectId/tasks', createTask);
+
+/**
+ * @swagger
+ * /projects/{projectId}/tasks:
+ *   get:
+ *     summary: Get all tasks for a project
+ *     tags: [Tasks]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Project ID
+ *     responses:
+ *       200:
+ *         description: List of tasks
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   status:
+ *                     type: string
+ *                     enum: [OPEN, IN_PROGRESS, DONE]
+ *                   project:
+ *                     type: string
+ *       400:
+ *         description: Invalid project id
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: Project not found
+ */
+
+//GET /projects/:projectId/tasks
+router.get('/projects/:projectId/tasks', getTasksbyProject);
 
 export default router;

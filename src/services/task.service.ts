@@ -27,3 +27,21 @@ export const createTaskService = async (
 
   return task;
 };
+
+//Get all tasks of the project of a logged in user
+export const getAllTasksbyProjectService = async (projectId: string, userId: string) => {
+  const project = await Project.findOne({
+    _id: projectId,
+    owner: userId,
+  });
+
+  if (!project) {
+    return null;
+  }
+
+  const tasks = await Task.find({
+    project: projectId,
+  });
+
+  return tasks;
+};

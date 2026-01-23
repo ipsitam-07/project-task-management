@@ -42,7 +42,7 @@ router.use(authMiddleware);
  *       401:
  *         description: Unauthorized
  *       500:
- *         description: Failed to create project
+ *         description: Internal server error
  */
 
 //POST /projects
@@ -68,7 +68,7 @@ router.post('/', createProject);
  *       401:
  *         description: Unauthorized
  *       500:
- *         description: Failed to get projects
+ *         description: Internal server error
  */
 
 //GET /projects
@@ -103,7 +103,7 @@ router.get('/', getProjects);
  *       404:
  *         description: Project not found
  *       500:
- *         description: Failed to get project
+ *         description: Internal server error
  */
 
 //GET /projects/:id
@@ -151,7 +151,7 @@ router.get('/:id', getProjectbyID);
  *       404:
  *         description: Project not found
  *       500:
- *         description: Failed to update project
+ *         description: Internal server error
  */
 
 //PUT /projects/:id
@@ -182,7 +182,7 @@ router.put('/:id', updateProjectbyID);
  *       404:
  *         description: Project not found
  *       500:
- *         description: Failed to delete project
+ *         description: Internal server error
  */
 
 //DETELE /projects/:id
