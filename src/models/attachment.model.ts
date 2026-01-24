@@ -7,7 +7,7 @@ const attachmentSchema = new Schema(
       required: true,
     },
 
-    filePath: {
+    originalName: {
       type: String,
       required: true,
     },
@@ -17,7 +17,7 @@ const attachmentSchema = new Schema(
       required: true,
     },
 
-    fileType: {
+    mimeType: {
       type: String,
       required: true,
     },

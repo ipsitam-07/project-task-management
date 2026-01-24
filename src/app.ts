@@ -1,8 +1,9 @@
 import express from 'express';
 import authRoutes from './routes/auth.route';
-import { errorHandler } from './middlewares/errorMiddleware';
+import { errorHandler } from './middlewares/error.middleware';
 import projectRoutes from './routes/projects.route';
 import taskRoutes from './routes/task.route';
+import attachmentRoutes from './routes/attachment.route';
 import { swaggerDocs } from './swagger';
 
 const app = express();
@@ -13,6 +14,7 @@ swaggerDocs(app);
 app.use('/auth', authRoutes);
 app.use('/projects', projectRoutes);
 app.use('/', taskRoutes);
+app.use('/', attachmentRoutes);
 
 //error handler
 app.use(errorHandler);

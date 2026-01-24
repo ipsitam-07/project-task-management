@@ -9,5 +9,6 @@ export function errorHandler(err: Error, _req: AuthRequest, res: Response, _next
       message: err.message,
     });
   }
+  console.error(err);
   res.status(500).json({ success: false, message: 'Internal Server Error' });
 }
