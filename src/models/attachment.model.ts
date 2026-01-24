@@ -28,6 +28,11 @@ const attachmentSchema = new Schema(
       default: 'UPLOADED',
     },
 
+    path: {
+      type: String,
+      required: true,
+    },
+
     task: {
       type: Types.ObjectId,
       ref: 'Task',

@@ -6,7 +6,7 @@ import {
   updateProjectbyID,
   deleteProjectbyID,
 } from '../controllers/project.controller';
-import authMiddleware from '../middlewares/authMiddleware';
+import authMiddleware from '../middlewares/auth.middleware';
 
 const router = Router();
 
