@@ -2,7 +2,11 @@ import { AppError } from '../utils/error';
 import { AuthRequest } from '../types';
 import { Response } from 'express';
 import { Task } from '../models/task.model';
-import { uploadTaskAttachmentsService, getAttachmentService } from '../services/attachment.service';
+import {
+  uploadTaskAttachmentsService,
+  getAttachmentService,
+  downloadAttachmentService,
+} from '../services/attachment.service';
 
 export const uploadTaskAttachments = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
@@ -51,4 +55,27 @@ export const getTaskAttachments = async (req: AuthRequest, res: Response) => {
     success: true,
     data: attachments,
   });
+};
+
+//Download attachment
+
+export const downloadAttachment = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const attachmentId = req.params.id;
+
+  if (!userId) {
+    throw new AppError('Unauthorized', 401);
+  }
+
+  if (!attachmentId || typeof attachmentId !== 'string') {
+    throw new AppError('Invalid attachment id', 400);
+  }
+
+  const attachment = await downloadAttachmentService(userId, attachmentId);
+
+  if (!attachment) {
+    throw new AppError('Attachment not found', 404);
+  }
+
+  res.download(attachment.path, attachment.originalName);
 };

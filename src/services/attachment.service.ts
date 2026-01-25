@@ -2,6 +2,7 @@ import { AppError } from '../utils/error';
 import { Task } from '../models/task.model';
 import { Project } from '../models/project.model';
 import { Attachment } from '../models/attachment.model';
+import fs from 'fs';
 
 export const uploadTaskAttachmentsService = async (
   taskId: string,
@@ -67,4 +68,35 @@ export const getAttachmentService = async (userId: string, taskId: string) => {
   });
 
   return attachments;
+};
+
+//Download attachment
+export const downloadAttachmentService = async (userId: string, attachmentId: string) => {
+  if (!attachmentId || typeof attachmentId !== 'string') {
+    throw new AppError('Invalid attachment id', 400);
+  }
+
+  const attachment = await Attachment.findById(attachmentId);
+
+  if (!attachment) {
+    throw new AppError('Attachment not found', 404);
+  }
+
+  const task = await Task.findById(attachment.task);
+  if (!task) return null;
+
+  const project = await Project.findOne({
+    _id: task.project,
+    owner: userId,
+  });
+
+  if (!project) {
+    throw new AppError('Forbidden', 403);
+  }
+
+  if (!fs.existsSync(attachment.path)) {
+    throw new AppError('File not found on disk', 404);
+  }
+
+  return attachment;
 };

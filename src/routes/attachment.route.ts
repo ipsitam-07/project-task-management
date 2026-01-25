@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import authMiddleware from '../middlewares/auth.middleware';
 import { upload } from '../middlewares/attachment.middleware';
-import { uploadTaskAttachments, getTaskAttachments } from '../controllers/attachment.controller';
+import {
+  uploadTaskAttachments,
+  getTaskAttachments,
+  downloadAttachment,
+} from '../controllers/attachment.controller';
 
 const router = Router();
 router.use(authMiddleware);
@@ -74,5 +78,43 @@ router.post('/tasks/:taskId/attachments', upload.array('files'), uploadTaskAttac
 
 //GET /tasks/:taskId/attachments
 router.get('/tasks/:taskId/attachments', getTaskAttachments);
+
+/**
+ * @swagger
+ * /attachments/{id}/download:
+ *   get:
+ *     summary: Download an attachment file
+ *     tags: [Attachments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Attachment ID
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: File downloaded successfully
+ *         content:
+ *           application/octet-stream:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         description: Invalid attachment ID
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Attachment or file not found
+ *       500:
+ *         description: Internal server error
+ */
+
+//GET /attachments/:id/download
+router.get('/attachments/:id/download', downloadAttachment);
 
 export default router;
