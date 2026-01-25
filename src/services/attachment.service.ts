@@ -27,7 +27,6 @@ export const uploadTaskAttachmentsService = async (
   const attachments = [];
 
   for (const file of files) {
-
     const attachment = await Attachment.create({
       task: taskId,
       filename: file.filename,
@@ -40,6 +39,32 @@ export const uploadTaskAttachmentsService = async (
 
     attachments.push(attachment);
   }
+
+  return attachments;
+};
+
+//Get list of task attachments
+export const getAttachmentService = async (userId: string, taskId: string) => {
+  if (!taskId) {
+    throw new AppError('Invalid task id', 400);
+  }
+
+  const task = await Task.findById(taskId);
+  if (!task) {
+    throw new AppError('Task not found', 404);
+  }
+  const project = await Project.findOne({
+    _id: task.project,
+    owner: userId,
+  });
+
+  if (!project) {
+    return null;
+  }
+
+  const attachments = await Attachment.find({
+    task: taskId,
+  });
 
   return attachments;
 };

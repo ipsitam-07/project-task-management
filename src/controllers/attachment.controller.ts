@@ -2,7 +2,7 @@ import { AppError } from '../utils/error';
 import { AuthRequest } from '../types';
 import { Response } from 'express';
 import { Task } from '../models/task.model';
-import { uploadTaskAttachmentsService } from '../services/attachment.service';
+import { uploadTaskAttachmentsService, getAttachmentService } from '../services/attachment.service';
 
 export const uploadTaskAttachments = async (req: AuthRequest, res: Response) => {
   const userId = req.user?.id;
@@ -27,6 +27,27 @@ export const uploadTaskAttachments = async (req: AuthRequest, res: Response) => 
   const attachments = await uploadTaskAttachmentsService(taskId, userId, files);
 
   res.status(201).json({
+    success: true,
+    data: attachments,
+  });
+};
+
+//Get attachments of the task by task ID
+export const getTaskAttachments = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const taskId = req.params.taskId;
+
+  if (!userId) {
+    throw new AppError('Unauthorized', 401);
+  }
+
+  if (!taskId || typeof taskId !== 'string') {
+    throw new AppError('Invalid task id', 400);
+  }
+
+  const attachments = await getAttachmentService(userId, taskId);
+
+  res.status(200).json({
     success: true,
     data: attachments,
   });

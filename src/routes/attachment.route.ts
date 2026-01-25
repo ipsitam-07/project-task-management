@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import authMiddleware from '../middlewares/auth.middleware';
 import { upload } from '../middlewares/attachment.middleware';
-import { uploadTaskAttachments } from '../controllers/attachment.controller';
+import { uploadTaskAttachments, getTaskAttachments } from '../controllers/attachment.controller';
 
 const router = Router();
 router.use(authMiddleware);
@@ -44,5 +44,35 @@ router.use(authMiddleware);
  */
 
 router.post('/tasks/:taskId/attachments', upload.array('files'), uploadTaskAttachments);
+
+/**
+ * @swagger
+ * /tasks/{taskId}/attachments:
+ *   get:
+ *     summary: Get all attachments for a task
+ *     tags: [Attachments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of attachments
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Task not found
+ *       500:
+ *         description: Internal server error
+ */
+
+//GET /tasks/:taskId/attachments
+router.get('/tasks/:taskId/attachments', getTaskAttachments);
 
 export default router;
