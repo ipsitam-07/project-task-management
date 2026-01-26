@@ -6,6 +6,7 @@ import {
   uploadTaskAttachmentsService,
   getAttachmentService,
   downloadAttachmentService,
+  deleteAttachmentService,
 } from '../services/attachment.service';
 
 export const uploadTaskAttachments = async (req: AuthRequest, res: Response) => {
@@ -78,4 +79,29 @@ export const downloadAttachment = async (req: AuthRequest, res: Response) => {
   }
 
   res.download(attachment.path, attachment.originalName);
+};
+
+//Delete attachment
+export const deleteAttachment = async (req: AuthRequest, res: Response) => {
+  const userId = req.user?.id;
+  const attachmentId = req.params.id;
+
+  if (!userId) {
+    throw new AppError('Unauthorized', 401);
+  }
+
+  if (!attachmentId || typeof attachmentId !== 'string') {
+    throw new AppError('Invalid attachment id', 400);
+  }
+
+  const deleted = await deleteAttachmentService(attachmentId, userId);
+
+  if (!deleted) {
+    throw new AppError('Attachment not found', 404);
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Attachment deleted successfully',
+  });
 };

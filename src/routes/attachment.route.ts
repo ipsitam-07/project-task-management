@@ -5,6 +5,7 @@ import {
   uploadTaskAttachments,
   getTaskAttachments,
   downloadAttachment,
+  deleteAttachment,
 } from '../controllers/attachment.controller';
 
 const router = Router();
@@ -116,5 +117,39 @@ router.get('/tasks/:taskId/attachments', getTaskAttachments);
 
 //GET /attachments/:id/download
 router.get('/attachments/:id/download', downloadAttachment);
+
+
+/**
+ * @swagger
+ * /attachments/{id}:
+ *   delete:
+ *     summary: Delete an attachment
+ *     tags: [Attachments]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Attachment ID
+ *     responses:
+ *       200:
+ *         description: Attachment deleted successfully
+ *       400:
+ *         description: Invalid attachment ID
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: Attachment not found
+ *       500:
+ *         description: Internal server error
+ */
+
+//DELETE /attachments/:id
+router.delete('/attachments/:id', deleteAttachment);
 
 export default router;

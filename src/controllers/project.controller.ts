@@ -8,7 +8,6 @@ import {
 } from '../services/project.service';
 import { AuthRequest } from '../types';
 import { AppError } from '../utils/error';
-import { appendFile } from 'node:fs';
 
 //POST
 export const createProject = async (req: AuthRequest, res: Response) => {

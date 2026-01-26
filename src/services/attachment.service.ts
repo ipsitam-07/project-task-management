@@ -100,3 +100,31 @@ export const downloadAttachmentService = async (userId: string, attachmentId: st
 
   return attachment;
 };
+
+//Delete attachment
+export const deleteAttachmentService = async (attachmentId: string, userId: string) => {
+  if (!attachmentId) throw new AppError('Invalid attachment id', 400);
+
+  const attachment = await Attachment.findById(attachmentId);
+  if (!attachment) return null;
+
+  const task = await Task.findById(attachment.task);
+  if (!task) return null;
+
+  const project = await Project.findOne({
+    _id: task.project,
+    owner: userId,
+  });
+
+  if (!project) {
+    throw new AppError('Forbidden', 403);
+  }
+
+  if (attachment.path && fs.existsSync(attachment.path)) {
+    fs.unlinkSync(attachment.path);
+  }
+
+  await Attachment.findByIdAndDelete(attachmentId);
+
+  return true;
+};
