@@ -1,9 +1,9 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import authConfig from '../config/auth.config';
 import { NextFunction, Response } from 'express';
-import { AuthRequest } from '../types';
+import { IAuthRequest } from '../types';
 
-const authMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
+const authMiddleware = (req: IAuthRequest, res: Response, next: NextFunction) => {
   const authHeader = req.header('Authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({

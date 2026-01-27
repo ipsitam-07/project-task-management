@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { AuthRequest } from '../types';
+import { IAuthRequest } from '../types';
 import {
   createTaskService,
   getAllTasksbyProjectService,
@@ -10,7 +10,7 @@ import {
 import { AppError } from '../utils/error';
 
 //POST /projects/:projectId/tasks
-export const createTask = async (req: AuthRequest, res: Response) => {
+export const createTask = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const projectId = req.params.projectId;
   const { title, description } = req.body;
@@ -41,7 +41,7 @@ export const createTask = async (req: AuthRequest, res: Response) => {
 };
 
 //GET /projects/:projectId/tasks
-export const getTasksbyProject = async (req: AuthRequest, res: Response) => {
+export const getTasksbyProject = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const projectId = req.params.projectId;
 
@@ -66,7 +66,7 @@ export const getTasksbyProject = async (req: AuthRequest, res: Response) => {
 };
 
 //GET /tasks/:id
-export const getTaskById = async (req: AuthRequest, res: Response) => {
+export const getTaskById = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const taskId = req.params.id;
 
@@ -91,7 +91,7 @@ export const getTaskById = async (req: AuthRequest, res: Response) => {
 };
 
 //PATCH /tasks/:id/status
-export const updateTaskStatus = async (req: AuthRequest, res: Response) => {
+export const updateTaskStatus = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const taskId = req.params.id;
   const status = req.body.status;
@@ -122,7 +122,7 @@ export const updateTaskStatus = async (req: AuthRequest, res: Response) => {
 
 //DELETE /tasks/:id
 
-export const deleteTask = async (req: AuthRequest, res: Response) => {
+export const deleteTask = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const taskId = req.params.id;
 

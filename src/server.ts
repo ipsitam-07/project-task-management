@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import app from './app';
 import config from './config/app.config';
+import './events/attachment.listeners';
 
 const PORT = config.port;
 const MONGO_URI = config.mongoURI;

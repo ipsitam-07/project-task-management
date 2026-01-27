@@ -6,11 +6,11 @@ import {
   updateProjectsbyIdService,
   deleteProjectsByidService,
 } from '../services/project.service';
-import { AuthRequest } from '../types';
+import { IAuthRequest } from '../types';
 import { AppError } from '../utils/error';
 
 //POST
-export const createProject = async (req: AuthRequest, res: Response) => {
+export const createProject = async (req: IAuthRequest, res: Response) => {
   const { name, description } = req.body;
 
   const userId = req.user?.id;
@@ -35,7 +35,7 @@ export const createProject = async (req: AuthRequest, res: Response) => {
 };
 
 //GET
-export const getProjects = async (req: AuthRequest, res: Response) => {
+export const getProjects = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
 
   //no user validation
@@ -52,7 +52,7 @@ export const getProjects = async (req: AuthRequest, res: Response) => {
 };
 
 //GET Projects by ID
-export const getProjectbyID = async (req: AuthRequest, res: Response) => {
+export const getProjectbyID = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const projectId = req.params.id;
 
@@ -77,7 +77,7 @@ export const getProjectbyID = async (req: AuthRequest, res: Response) => {
 };
 
 //UPDATE Projects by ID
-export const updateProjectbyID = async (req: AuthRequest, res: Response) => {
+export const updateProjectbyID = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const projectID = req.params.id;
   const { name, description } = req.body;
@@ -107,7 +107,7 @@ export const updateProjectbyID = async (req: AuthRequest, res: Response) => {
 };
 
 //DELETE Project by ID
-export const deleteProjectbyID = async (req: AuthRequest, res: Response) => {
+export const deleteProjectbyID = async (req: IAuthRequest, res: Response) => {
   const userID = req.user?.id;
   const projectID = req.params.id;
 

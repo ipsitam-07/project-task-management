@@ -118,7 +118,6 @@ router.get('/tasks/:taskId/attachments', getTaskAttachments);
 //GET /attachments/:id/download
 router.get('/attachments/:id/download', downloadAttachment);
 
-
 /**
  * @swagger
  * /attachments/{id}:

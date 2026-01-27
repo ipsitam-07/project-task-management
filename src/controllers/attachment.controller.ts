@@ -1,5 +1,5 @@
 import { AppError } from '../utils/error';
-import { AuthRequest } from '../types';
+import { IAuthRequest } from '../types';
 import { Response } from 'express';
 import { Task } from '../models/task.model';
 import {
@@ -9,7 +9,7 @@ import {
   deleteAttachmentService,
 } from '../services/attachment.service';
 
-export const uploadTaskAttachments = async (req: AuthRequest, res: Response) => {
+export const uploadTaskAttachments = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const taskId = req.params.taskId;
 
@@ -38,7 +38,7 @@ export const uploadTaskAttachments = async (req: AuthRequest, res: Response) => 
 };
 
 //Get attachments of the task by task ID
-export const getTaskAttachments = async (req: AuthRequest, res: Response) => {
+export const getTaskAttachments = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const taskId = req.params.taskId;
 
@@ -60,7 +60,7 @@ export const getTaskAttachments = async (req: AuthRequest, res: Response) => {
 
 //Download attachment
 
-export const downloadAttachment = async (req: AuthRequest, res: Response) => {
+export const downloadAttachment = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const attachmentId = req.params.id;
 
@@ -82,7 +82,7 @@ export const downloadAttachment = async (req: AuthRequest, res: Response) => {
 };
 
 //Delete attachment
-export const deleteAttachment = async (req: AuthRequest, res: Response) => {
+export const deleteAttachment = async (req: IAuthRequest, res: Response) => {
   const userId = req.user?.id;
   const attachmentId = req.params.id;
 

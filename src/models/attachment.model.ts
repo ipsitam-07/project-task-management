@@ -38,6 +38,9 @@ const attachmentSchema = new Schema(
       ref: 'Task',
       required: true,
     },
+    checksum: {
+      type: String,
+    },
   },
   {
     timestamps: true,

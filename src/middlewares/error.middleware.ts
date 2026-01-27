@@ -1,8 +1,8 @@
 import { Response, NextFunction } from 'express';
-import { AuthRequest } from '../types';
+import { IAuthRequest } from '../types';
 import { AppError } from '../utils/error';
 
-export function errorHandler(err: Error, _req: AuthRequest, res: Response, _next: NextFunction) {
+export function errorHandler(err: Error, _req: IAuthRequest, res: Response, _next: NextFunction) {
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
       success: false,

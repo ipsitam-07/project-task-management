@@ -3,7 +3,9 @@ import { Task } from '../models/task.model';
 import { Project } from '../models/project.model';
 import { Attachment } from '../models/attachment.model';
 import fs from 'fs';
+import attachmentEventEmitter from '../events/attachments.events';
 
+//Creating an attachment
 export const uploadTaskAttachmentsService = async (
   taskId: string,
   userId: string,
@@ -38,6 +40,7 @@ export const uploadTaskAttachmentsService = async (
       status: 'UPLOADED',
     });
 
+    attachmentEventEmitter.emit('ATTACHMENT_UPLOADED', attachment._id.toString());
     attachments.push(attachment);
   }
 
