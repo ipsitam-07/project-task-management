@@ -60,7 +60,7 @@ export const getAttachmentService = async (userId: string, taskId: string) => {
   const project = await Project.findOne({
     _id: task.project,
     owner: userId,
-  });
+  }).sort({ createdAt: -1 });
 
   if (!project) {
     return null;

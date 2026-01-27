@@ -44,7 +44,7 @@ export const getAllTasksbyProjectService = async (projectId: string, userId: str
 
   const tasks = await Task.find({
     project: projectId,
-  });
+  }).sort({ createdAt: -1 });
 
   return tasks;
 };

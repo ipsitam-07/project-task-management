@@ -17,7 +17,7 @@ export const createProjectService = async (name: string, description: string, ow
 
 //Get all projects
 export const getProjectsService = async (userId: string) => {
-  const projects = await Project.find({ owner: userId });
+  const projects = await Project.find({ owner: userId }).sort({ createdAt: -1 });
   return projects;
 };
 
