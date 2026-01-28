@@ -2,7 +2,7 @@ import { Worker } from 'worker_threads';
 import path from 'path';
 
 export const runAttachmentWorker = (attachmentId: string) => {
-  const worker = new Worker(path.resolve(__dirname, 'attachment.worker.js'));
+  const worker = new Worker(path.resolve(__dirname, '../workers/attachment.worker.js'));
 
   worker.postMessage(attachmentId);
 

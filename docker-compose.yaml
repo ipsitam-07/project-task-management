@@ -1,0 +1,40 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: task_api
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+      - ./uploads:/app/uploads
+      - /app/node_modules
+    command: npm run dev
+
+  mongo:
+    image: mongo:6
+    container_name: task_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: task_nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  mongo_data:
